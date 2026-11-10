@@ -1,0 +1,11 @@
+{
+  "name": "automotive-quote-simulator",
+  "version": "1.0.0",
+  "description": "Multi-brand vehicle quote simulator with guarded financing math, callout fallback simulation, and A4 PDF print layout.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "author": "Luis Carmona",
+  "license": "MIT"
+}
