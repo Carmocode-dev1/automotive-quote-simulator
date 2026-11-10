@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Automotive Quote &amp; Financing Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar no-print">
+    <div class="wrap topbar-inner">
+      <div>
+        <span class="kicker">Multi-Brand Quote Engine</span>
+        <h1>Automotive Quote &amp; Financing Simulator</h1>
+      </div>
+      <div class="topbar-actions">
+        <a class="btn ghost" href="https://github.com/Carmocode-dev1/automotive-quote-simulator" target="_blank" rel="noopener">Source on GitHub</a>
+        <button id="print-btn" class="btn primary" type="button">Print / Save PDF Quote</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="controls no-print">
+      <section class="card">
+        <h2>1. Vehicle Inventory</h2>
+        <label class="field">
+          <span>Search model or plate</span>
+          <input id="search-input" type="search" placeholder="e.g. Corolla, 4821-KLM" />
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Division</span>
+            <select id="brand-filter">
+              <option value="ALL">All divisions</option>
+              <option value="Division Alpha">Division Alpha</option>
+              <option value="Division Beta">Division Beta</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Fuel</span>
+            <select id="fuel-filter">
+              <option value="ALL">All types</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Electric">Electric</option>
+            </select>
+          </label>
+        </div>
+        <div id="vehicle-list" class="vehicle-list"></div>
+      </section>
+
+      <section class="card">
+        <h2>2. Photo Lookup &amp; Template</h2>
+        <label class="field">
+          <span>Simulated Inventory API State</span>
+          <select id="callout-mode">
+            <option value="auto">Auto (Cache Hit / Lookup)</option>
+            <option value="api">Force HTTP 200 API Lookup</option>
+            <option value="missing">Force HTTP 404 (Photo Missing)</option>
+            <option value="error">Force HTTP 503 (Upstream Error)</option>
+          </select>
+        </label>
+        <div class="field">
+          <span>Commercial Brand Template</span>
+          <div class="segmented">
+            <button type="button" data-theme-btn="alpha" class="active">Division Alpha</button>
+            <button type="button" data-theme-btn="beta">Division Beta</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>3. Financing Parameters</h2>
+        <div class="grid-2">
+          <label class="field">
+            <span>Sale Price (EUR)</span>
+            <input id="input-price" type="number" min="0" step="50" />
+          </label>
+          <label class="field">
+            <span>Discount (EUR)</span>
+            <input id="input-discount" type="number" min="0" step="50" />
+          </label>
+          <label class="field">
+            <span>Warranty (EUR)</span>
+            <input id="input-warranty" type="number" min="0" step="50" />
+          </label>
+          <label class="field">
+            <span>Down Payment (EUR)</span>
+            <input id="input-downpayment" type="number" min="0" step="100" />
+          </label>
+          <label class="field">
+            <span>Annual TIN (%)</span>
+            <input id="input-tin" type="number" min="0" max="30" step="0.1" />
+          </label>
+          <label class="field">
+            <span>Opening Fee (%)</span>
+            <input id="input-fee" type="number" min="0" max="15" step="0.25" />
+          </label>
+        </div>
+      </section>
+    </aside>
+
+    <section class="preview-col">
+      <article id="quote-sheet" class="quote-sheet" data-theme="alpha">
+        <div class="sheet-head">
+          <div>
+            <span id="quote-ref" class="sheet-ref">QT-0000</span>
+            <h2 id="quote-title">Vehicle Quote</h2>
+            <p id="quote-meta" class="sheet-meta"></p>
+          </div>
+          <span id="callout-badge" class="badge ok no-print">Cache Hit</span>
+        </div>
+
+        <div id="photo-slot" class="photo-slot"></div>
+
+        <div id="guard-alert" class="guard-alert no-print" hidden>
+          Financed capital clamped to 0,00 EUR: down payment exceeds adjusted offer total. Negative balances are prevented on the PDF.
+        </div>
+
+        <div class="tables-grid">
+          <div>
+            <h3>Economic Summary</h3>
+            <table class="data-table">
+              <tbody id="summary-body"></tbody>
+            </table>
+          </div>
+          <div>
+            <h3>Installment Simulation (60–120 Months)</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Term</th>
+                  <th>TIN</th>
+                  <th>Monthly</th>
+                  <th>Total Repaid</th>
+                </tr>
+              </thead>
+              <tbody id="schedule-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <footer class="sheet-foot">
+          Installment figures are indicative and subject to credit approval. Resilient non-blocking quote pipeline.
+        </footer>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
